@@ -9,3 +9,4 @@ Sample examples:
 4. remove class based on onclick
 5. find attribute
 6. get data value
+7. ajax with json 
