@@ -1,4 +1,5 @@
 /* ajax and jason */
+/* custom js for getting data using json from external url */
 var pageCounter = 1;
 var animalContainer = document.getElementById("animal-info");
 var btn = document.getElementById("btn");
