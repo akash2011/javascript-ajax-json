@@ -1,154 +1,62 @@
-$(document).ready(function(){        
-        /* for any bundle selection */        
-        $('.bundle').on("click",function(){
-            var bundle_id=$(this).attr('id');          
-                      
-            if($(this).hasClass('forsale')){
-                console.log('Its for sale!');
-            }
-            else{
-                console.log('Not for sale!');
-            }
-            
-            var a_name='tiger';
-            a_name=$(this).data('nickname');
-            
-            /* display selected animal name */
-            $("#animal").html(a_name);
-            
-            /* display step 2 */
-            $('#step-2').show();
-        });
-        
-        /* add the word Bundle befor default bundle name */
-        function change_text(bundle_name){            
-            bundle_name1=$("#bundle-1").data('nickname');        
-            bundle_name2=$("#bundle-2").data('nickname');        
-            bundle_name3=$("#bundle-3").data('nickname');        
-            
-            $('div.bundle-1 h2').html(bundle_name+" "+bundle_name1);       
-            $('div.bundle-2 h2').html(bundle_name+" "+bundle_name2);       
-            $('div.bundle-3 h2').html(bundle_name+" "+bundle_name3);     
-        }
-                       
-        /* using prepend inserting word or text before h2 text */
-        function add_bundlename(bundle_name){
-            $('div.bundle h2').prepend(bundle_name);
-        }
-        
-                
-    /* ###### looping each bundle using .each() ###### */ 
-        $( "div.bundle" ).each(function(index ) {
-            var default_text = $( this ).text();
-            console.log(default_text);
-            
-            /* storing the nickname */
-            var bundle_nickname=$(this).data('nickname'); 
-            
-            /* storing bundle with nickname */
-            var new_text = 'Bundle '+bundle_nickname;            
-            
-            $(this).find("h2").html(new_text+" : "+default_text);
-            
-        });
-         
-    /* ##### top fixed nav bar when mouse scroll ##### */
-        var nav ='#topnav';
-        $(window).scroll(function(){                        
-            if($(this).scrollTop()>125){
-                /* when mouse scrolled down */
-                $('#topnav').addClass("nav_fixed");
-                $(".nav_fixed").slideDown('900');
-                $('#topnav').addClass("nav_color");
-                $('.nav_subscribe').addClass("fixednav_subscription");
-               }
-            else{
-                /* when mouse not scrolled */
-                $('#topnav').removeClass("nav_fixed");
-                $('#topnav').removeClass("nav_color");
-                $('.nav_subscribe').removeClass("fixednav_subscription");
-            }            
-        });
-    /* on scroll fixed nav ends */
-    
-    /* ########## For mobile nav ################ */    
-        $('.current_page').click(function(){
-            /* slide toggle */
-        $('menu').slideToggle('slow',function(){         
-            if ($('menu').is(':hidden'))
-            {   
-                 /* when slide closed */
-                 $('#topnav').removeClass("opened");
-                 $('.mobile_subscription').removeClass('blue');
-                 $('.mobile_nav h5').removeClass("black");
-                 $('.mobile_nav h5 i').css('transform','rotate(0deg)');
-                 $('.mobile_nav h5 i').css('transition','ease all 1s');
-                 $('.mobile_nav h5 i svg path').css('fill','#fff');
-            }
-            else
-            {
-                /* when slide open */
-                $('#topnav').addClass("opened"); 
-                $('.mobile_nav h5').addClass("black");                 
-                $('.mobile_subscription').addClass('blue');
-                $('.mobile_subscription').removeClass('.mobile_subscription');   //$('.mobile_nav h5 i').css('background','black');
-                $('.mobile_nav h5 i').css('transform','rotate(180deg)');
-                $('.mobile_nav h5 i svg path').css('fill','black');
-                
-            }
-       
-            });         
-                    
-        });    
-    
-    /* Mobile nav ends */
-    
-    
-    /* ######### For smooth scrolling to all links ##### */    
-          $("a").on('click', function(event) {
+/* ajax and jason */
+var pageCounter = 1;
+var animalContainer = document.getElementById("animal-info");
+var btn = document.getElementById("btn");
 
-            // Make sure this.hash has a value before overriding default behavior
-            if (this.hash !== "") {
-              // Prevent default anchor click behavior
-              event.preventDefault();
+btn.addEventListener("click", function() {
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open('GET', 'https://learnwebcode.github.io/json-example/animals-' + pageCounter + '.json');
+    
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+      renderHTML(ourData);
+    } else {
+      console.log("We connected to the server, but it returned an error.");
+    }
+    
+  };
 
-              // Store hash
-              var hash = this.hash;
+  ourRequest.onerror = function() {
+    console.log("Connection error");
+  };
 
-              // Using jQuery's animate() method to add smooth page scroll
-              // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-              $('html, body').animate({
-                scrollTop: $(hash).offset().top
-              }, 1000, function(){
+  ourRequest.send();
+  pageCounter++;
+    
+  if (pageCounter > 3) {
+    btn.classList.add("hide-me");
+  }
+    
+});
 
-                // Add hash (#) to URL when done scrolling (default click behavior)
-                window.location.hash = hash;
-              });
-            } // End if
-          });
-    /* Smooth scrolling ends */
+function renderHTML(data) {
+  var htmlString = "";
+
+  for (i = 0; i < data.length; i++) {
+    htmlString += "<p>" + data[i].name + " is a " + data[i].species + " that likes to eat ";
     
-    
-    
-    /* get the campaign id from the url */
-    //var url = "http://www.abc.com/get-started?oc=100002&campaingId=abcdef";
-    
-     var url = new URL(document.URL);
-     var searchParams = new URLSearchParams(url.search);
-     console.log(searchParams.get('campaignId'));    
-     var camp_id = searchParams.get('campaignId');
-     
-     $('.back-to-3').attr('href','file:///Users/910375/Public/ashraful/v4/bundle3.html?campaignId='+camp_id); 
-    
-    $('.back-to-2').attr('href','file:///Users/910375/Public/ashraful/v4/bundle2.html?campaignId='+camp_id);
-    
-    $('.back-to-home').attr('href','file:///Users/910375/Public/ashraful/v4/bundle.html?campaignId='+camp_id);
-    $('.nav_subscribe').attr('href','file:///Users/910375/Public/ashraful/v4/bundle.html?campaignId='+camp_id);
-    $('.mobile_subscription').attr('href','file:///Users/910375/Public/ashraful/v4/bundle.html?campaignId='+camp_id);
-    
-    
-     console.log(camp_id);
-    
-        
-});    
-    
+    for (ii = 0; ii < data[i].foods.likes.length; ii++) {
+      if (ii == 0) {
+        htmlString += data[i].foods.likes[ii];
+      } else {
+        htmlString += " and " + data[i].foods.likes[ii];
+      }
+    }
+
+    htmlString += ' and dislikes ';
+
+    for (ii = 0; ii < data[i].foods.dislikes.length; ii++) {
+      if (ii == 0) {
+        htmlString += data[i].foods.dislikes[ii];
+      } else {
+        htmlString += " and " + data[i].foods.dislikes[ii];
+      }
+    }
+
+    htmlString += '.</p>';
+
+  }
+
+  animalContainer.insertAdjacentHTML('beforeend', htmlString);
+}
