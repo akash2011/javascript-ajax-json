@@ -1,23 +1,19 @@
 /* custom javascript */
 /* by- ashraful kabir */
-$(document).ready(function(){
-     /* hide step 2  of purchase form, step-3,4,5,6. */
+$(document).ready(function(){    
     //$('#otherOptions').hide();
     
     /* on page loading adding sub-heading div */
-    $('.bundle-1 h2,.bundle-2 h2').after('<div class="sub-heading">&nbsp; </div>');
+    $('.bundle-1 h2,.bundle-2 h2').after('<div class="sub-heading">&nbsp; </div>');      
+    $('.sub-heading').last().css('height','auto');            
     
-    $('.sub-heading').last().css('height','auto');
-    
-        
-        
+    //$('.bundle').not('.notForSale').css();
     
         /* For any bundle selection */        
-        $('.bundle').on("click",function(){
+        $('.bundle').not('.notForSale').on("click",function(){
             var bundle_id=$(this).attr('id');          
-           // $( "body" ).find( "div.bundle" ).eq( -1 ).addClass( "blue" );
-            
-            if($( "body" ).find( "div.bundle" ).eq( -1 )){
+                     
+            if($(this).hasClass('forSale')){
                 console.log('Its for sale!');
                 /* Display the purchase message  */
                 $('.purchase-message').html('<h2>You can purchase this bundle.</h2>');
@@ -26,8 +22,10 @@ $(document).ready(function(){
                 
                 /* display other steps */
                 $('#otherOptions').show();
-               
+                var price = $(this).find('span.regularPrice').text();
+                $('span.price').text(price);
                 
+                 regularBundlePrice = $(this).find('span.regularPrice').text();                  
             }
             else{
                 console.log('Not for sale!');
@@ -42,12 +40,15 @@ $(document).ready(function(){
                 
             }
             
-            var a_name='tiger';
+             bundleName='tiger'; 
             /* storing the data value into a_name */
-            a_name=$(this).data('nickname');
+            bundleName=$(this).data('nickname');
             
             /* display selected animal name on div#animal */
-            $("#animal").html(a_name);            
+            $("#animal").html(bundleName); 
+            
+            /* display bundle name to variable block */
+             $('span.bundleSelected').text(bundleName);
             
         });
         
@@ -88,11 +89,48 @@ $(document).ready(function(){
             
         });
     
+    /* declaring global variables */
+    var regularPrice = 0;
+    var discountedPrice = 0;
+    var afterDiscountPrice = 0;
     
+    /* discount calculation method */
+    function discountCalculation(regularPrice,discountedPrice){
+        afterDiscountPrice = regularPrice-(regularPrice*discountedPrice/100);      
+        return afterDiscountPrice;
+    }
+    
+    /* total amount after discount */
+    var total = discountCalculation(10,30);
+    
+    console.log(total);
+    /* End of discount calculation */
+    
+    /* total amount round up global variable */
+    var totalNumber=0;
+    var precision=0;
+    /* round up the total amount method */
+    function roundTotalPrice(totalNumber,precision){        
+        return Math.ceil(totalNumber * precision) / precision;
+    }
+    
+    
+        /* set bundle discounted price */  
+        var bundle1Total = discountCalculation(10.55,50);
+        var bundle2Total = discountCalculation(14.75,50);
+        var bundle3Total = discountCalculation(21.40,50);
+        /* display round up discounted price to the span */
+        $('.discountedPrice').eq(0).text(roundTotalPrice(bundle1Total,100));
+        $('.discountedPrice').eq(1).text(roundTotalPrice(bundle2Total,100));
+        $('.discountedPrice').eq(2).text(roundTotalPrice(bundle3Total,100));
+    
+        
+    var color;
+    animal='tiger';
     /* step 2 submit username */
-    $( ".submit" ).click(function() {  
+    $( ".submit" ).on("click",function() {  
             /* storing the input value into var inputVal */
-            var inputVal = $("input#username").val(); 
+             inputVal = $("input#username").val(); 
             
             /* get the length of the input value */
             var length = inputVal.length;
@@ -130,6 +168,10 @@ $(document).ready(function(){
                     $('#form-text').html('Yahoooo!!! Good Job: '+inputVal);
                     /* add class success */
                     $("#form-text").addClass('success');
+                    $('#step-3').css('display','block');
+                    
+                     $('span.username').text(inputVal);
+                    
                 }
                 
             }
@@ -147,48 +189,67 @@ $(document).ready(function(){
     /* end of username submission */
     
     /* declare global variable for quantity */
-    var circleQuantity=0;   
-    var triangleQuantity=0; 
+    //var circleQuantity=0;   
+   // var triangleQuantity=0; 
     
     /* function for get circle active class quantity */
     function getCircleQuantity(){
          /* getting the length of ciractive */
          circleQuantity =$('.ciractive').length;
+        return circleQuantity;
     }
      /* function for get triangle active class quantity */
     function getTriangleQuantity(){
          triangleQuantity =$('.triactive').length;
+        return triangleQuantity;
     }    
         
     
     /* ######## triangle selection ######### */
    
-    $('div.triangles').click(function(){
+    $('div.triangles').on("click",function(){
         /* adding toggle class triactive */
         $(this).toggleClass('triactive');
         
         /* Count active class of triangle */
         getTriangleQuantity();
         
-        /* display number of active class of triangles in span */
-       $('span#triangleQuantity').text(triangleQuantity);
+         /* display step 4 when shapes more then 0 */
+        var cs = checkShapes(); // total quantity of shapes 
+        if(cs>0){
+            $('#step-4').css('display','block');
+            ShowAllVariables(); // show all variables
+           }
+        else{
+             $('#step-4').css('display','none');
+        }
+        
+        // $('span.triangleQuantity').text(triangleQuantity);
        
     });
    /* ################ End of triangle selection ######## */ 
      
   /*   Circle selection  */    
-    $('.circles').click(function(){
+    $('.circles').on("click",function(){
         /* add the toogle class ciractive */
         $(this).toggleClass('ciractive');
         
         /* count active class of circle */
           getCircleQuantity();
         
-        /* display number of active class of circles in span */
-       $('span#circleQuantity').text(circleQuantity);
+        /* display step 4 when shapes more then 0 */
+        var cs = checkShapes(); // total quantity of shapes 
+        if(cs>0){
+            $('#step-4').css('display','block');
+            ShowAllVariables(); // show all variables
+           }
+        else{
+             $('#step-4').css('display','none');
+        }
     });
    /*  End of circle selection */    
     
+   
         
     /* get the campaign id from the current url */
     var url = new URL(document.URL);
@@ -203,131 +264,33 @@ $(document).ready(function(){
     $('.back-to-home').attr('href','bundle.html?campaignId='+camp_id);
     $('.nav-block a.nav_subscribe').attr('href','bundle.html?campaignId='+camp_id);    
     
-     console.log(camp_id);
+     console.log(camp_id); 
     
+    /* Check Shapes Quantity */
+    var totalShape = 0;
+    function checkShapes(){
+        totalShape = getCircleQuantity()+getTriangleQuantity();
+        return totalShape;
+    }
+     
+    /* Show all variables  */
+    function ShowAllVariables(){
+        $('span.username').text(inputVal);
+        $('span.bundleSelected').text(bundleName);
+        $('span.price').text(regularBundlePrice);
+        $('span.triangleQuantity').text(triangleQuantity);
+        $('span.circleQuantity').text(circleQuantity);
+    }
     
+    /* submit the variables to tracker.js */
+    $('sender').on("click",function(){
+      alert('send data to tracker.js');   
         
-    $("figcaption h6 i.toggle_icon").click(function(){
-       // console.log('test');       
-        $('p.toggle').slideToggle();
-        $('.toggle_icon').css('transform','rotate(45deg)');
-    
+                
+        
     });
     
-        
-    /* jQuery .not() test */
-        /* only even number of li will be background green*/
-        $('li').not(':even').css('background','green');
     
-        /* only odd number of li will be background #ccc */
-        $('li').not(':odd').css('background','#ccc');
-    
-        /* all li will be font weight bold exclude class first and last */
-        $('li').not('.first,.last').css('font-weight','bold');
-    
-        /* all li will be bordered right excluded the class last  */
-        $('li').not('.last').css('border-right','3px solid #000');
-    
-        /* all li will have margin right exclude the class last */
-        $('li').not('.last').css('margin-right','10px');
-    
-    
-           
-        /* function for get rotated class quantity */
-        var rotated=0;
-        function getRotated(){
-             rotated =$('.rotated').length;
-        }
-    
-         /* ######## Learn more button click  ######### */
-
-        $('.more').click(function(){
-            /* adding toggle class details */
-            $('.details').toggle('slow');           
-                     
-            /* Count active class of rotated */
-            getRotated();
-            
-            /* if roated is active or roated=1 */
-            if(rotated>0){
-                /* remove class rotated */
-                $('.more i').removeClass('rotated');
-                /* add transform roated to 0deg */
-                $('.more i').css('transform','rotate(0deg)');
-                /* add Learn More text to the span */
-                $('.more span').html('Learn More');
-                /* remove class close */
-                $('.more').removeClass('close');
-               }
-            /* when roated is removed or roated=0 */
-            else{
-                /* add class roated */
-                $('.more i').addClass('rotated');
-                /* add transform roated to 45deg */
-                $('.more i').css('transform','rotate(45deg)');
-                /* add close text to the span */
-                $('.more span').html('Close');
-                /* add class close */
-                $('.more').addClass('close'); 
-                $('.time').html($.now());
-            }                   
-
-        });
-    /* End of Learn More button*/ 
-    
-    
-    
-    
-    /* top fixed nav bar when mouse scroll */
-        var nav ='#topnav';
-        $(window).scroll(function(){                        
-            if($(this).scrollTop()>125){
-                /* when mouse scrolled down */
-                $('#topnav').addClass("nav_fixed");
-                $(".nav_fixed").slideDown('900');
-                $('#topnav').addClass("nav_color");
-                $('.nav_subscribe').addClass("fixednav_subscription");
-               }
-            else{
-                /* when mouse not scrolled */
-                $('#topnav').removeClass("nav_fixed");
-                $('#topnav').removeClass("nav_color");
-                $('.nav_subscribe').removeClass("fixednav_subscription");
-            }            
-        });
-    /* on scroll fixed nav ends */
-    
-    /* ########## For mobile nav ################ */    
-        $('.current_page').click(function(){
-            /* slide toggle */
-        $('menu').slideToggle('slow',function(){         
-            if ($('menu').is(':hidden'))
-            {   
-                 /* when slide closed */
-                 $('#topnav').removeClass("opened");
-                 $('.mobile_subscription').removeClass('blue');
-                 $('.mobile_nav h5').removeClass("black");
-                 $('.mobile_nav h5 i').css('transform','rotate(0deg)');
-                 $('.mobile_nav h5 i').css('transition','ease all 1s');
-                 $('.mobile_nav h5 i svg path').css('fill','#fff');
-            }
-            else
-            {
-                /* when slide open */
-                $('#topnav').addClass("opened"); 
-                $('.mobile_nav h5').addClass("black");                 
-                $('.mobile_subscription').addClass('blue');
-                $('.mobile_subscription').removeClass('.mobile_subscription');   //$('.mobile_nav h5 i').css('background','black');
-                $('.mobile_nav h5 i').css('transform','rotate(180deg)');
-                $('.mobile_nav h5 i svg path').css('fill','black');
-                
-            }
-       
-            });         
-                    
-        });    
-    
-    /* Mobile nav ends */  
     
         
 });    
