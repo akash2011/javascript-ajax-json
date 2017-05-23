@@ -25,19 +25,28 @@
         <!-- bundle container -->
         <div class="bundle-container">
             <!-- Bundle 1 -->
-            <div class="bundle-1 bundle forsale" id="bundle-1" data-nickname="Basic">
+            <div class="bundle-1 bundle forSale" id="bundle-1" data-nickname="Basic">
                 <h2></h2>                
                 <div class="bundle-img">
                     <img src="img/basic.png">
                 </div>
+                <div class="price">
+                    Only <span class="regularPrice">$10.55</span>
+                    
+                </div>
+                
             </div>
             <!-- bundle 1 ends -->
             
             <!-- Bundle 2 -->
-            <div class="bundle-2 bundle forsale" id="bundle-2" data-nickname="All Access">
+            <div class="bundle-2 bundle forSale" id="bundle-2" data-nickname="All Access">
                 <h2></h2>                
                 <div class="bundle-img">
                     <img src="img/all-access.png">
+                </div>
+                <div class="price">
+                    Only <span class="regularPrice">$14.75</span>
+                   
                 </div>
             </div>
             <!-- bundle 2 ends -->
@@ -48,6 +57,10 @@
                 <div class="sub-heading">+All Access</div>
                 <div class="bundle-img">
                     <img src="img/home-delivery.png">
+                    <div class="price">
+                    Only <span class="regularPrice">$21.40</span>
+                    
+                </div>
                 </div>
             </div>
             <!-- bundle 3 ends -->
@@ -86,7 +99,7 @@
     <!-- Purchase form -->
     <section id="step-2">
         <!-- step 2 purchase form container -->
-        <div class="container step-2" >
+        <div class="container">
              <h1>Purchase Form</h1>
             <hr>
              <!-- form start -->           
@@ -139,12 +152,7 @@
                 
             </div>
             <!-- End of triangle container -->
-       
-    </section>
-    <!-- End of Step 3 section -->
-    
-    <!-- Step 4 section -->
-    <section id="step-4">
+        
         <!-- messages block-->
         <div class="tricircle">        
           You Have Selected:  <span id="triangleQuantity"></span> Triangles And <span id="circleQuantity"></span> Circles.
@@ -159,6 +167,24 @@
                 <div class="circles"></div>             
         </div>
         <!-- End of circle container -->
+       
+    </section>
+    <!-- End of Step 3 section -->
+    
+    <!-- Step 4 section -->
+    <section id="step-4">
+        <div class="container">  
+            <h1>All Variables</h1>
+              <p>Username: <span class="username"></span></p>
+              <p>Bundle Selected: <span class="bundleSelected"></span></p>
+              <p>Price: <span class="price"></span></p>
+              <p>Triangle Quantity:<span class="triangleQuantity"> </span></p>
+              <p>Circle Quantity:<span class="circleQuantity"> </span></p>
+            
+            <sender>
+                Send The Data
+            </sender>
+        </div>
         
     </section>
     <!-- End of step 4 -->
